@@ -13,7 +13,7 @@ namespace ChristCodingChallengeBackend
             string filePath = "articles.csv";
             string accessPath = "access.csv";
 
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = new();
             var builder = WebApplication.CreateBuilder(args);
             var storageService = new StorageService(filePath, accessPath);
 

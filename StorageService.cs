@@ -18,9 +18,11 @@
         }
 
         // ! Methods
+        // todo Better Comments entfernen
+        // todo HIER WEITER
         public async Task StoreArticlesAsync(IEnumerable<Article> articles)
         {
-            using (StreamWriter writer = new StreamWriter(_filePath))
+            using (StreamWriter writer = new(_filePath))
             {
                 // Header schreiben
                 WriteHeader(writer);

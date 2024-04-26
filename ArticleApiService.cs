@@ -6,7 +6,7 @@
         private readonly HttpClient _httpClient;
         private readonly string _apiUrl;
         private readonly StorageService _storageService;
-        private HashSet<Article> _articles = new();
+        private readonly HashSet<Article> _articles = [];
 
         // ! Properties
 
