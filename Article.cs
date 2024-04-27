@@ -1,74 +1,59 @@
 ﻿namespace ChristCodingChallengeBackend
 {
-    public class Article
+    public class Article(int artikelnummer, string marke, string material1, string material2, string material3,
+        string legierung1, string legierung2, string legierung3, string kollektion, string warengruppe,
+        string warenhauptgruppe, string geschlecht)
     {
-        // ! Fields
-        #region fields
+        #region Fields
         // articleId
-        private string _artikelnummer = "";
+        private int _artikelnummer = artikelnummer;
         // MRK
-        private string _marke = "";
+        private string _marke = marke;
         // MAT
-        private string _material1 = "";
+        private string _material1 = material1;
         // MAT2
-        private string _material2 = "";
+        private string _material2 = material2;
         // MAT3
-        private string _material3 = "";
+        private string _material3 = material3;
         // LEG
-        private string _legierung1 = "";
+        private string _legierung1 = legierung1;
         // LEG2
-        private string _legierung2 = "";
+        private string _legierung2 = legierung2;
         // LEG3
-        private string _legierung3 = "";
+        private string _legierung3 = legierung3;
         // KOLL
-        private string _kollektion = "";
+        private string _kollektion = kollektion;
         // WRG_2
-        private string _warengruppe = "";
+        private string _warengruppe = warengruppe;
         // WHG_2
-        private string _warenhauptgruppe = "";
+        private string _warenhauptgruppe = warenhauptgruppe;
         // ZIEL
-        private string _geschlecht = "";
+        private string _geschlecht = geschlecht;
         #endregion
 
-        // ! Properties
-        #region properties
-        public string Artikelnummer { get; set; }
-        public string Marke { get; set; }
-        public string Material1 { get; set; }
-        public string Material2 { get; set; }
-        public string Material3 { get; set; }
-        public string Legierung1 { get; set; }
-        public string Legierung2 { get; set; }
-        public string Legierung3 { get; set; }
-        public string Kollektion { get; set; }
-        public string Warengruppe { get; set; }
-        public string Warenhauptgruppe { get; set; }
-        public string Geschlecht { get; set; }
+        #region Propeties
+        public int Artikelnummer { get; set; }
+        public string Marke { get; set; } = string.Empty;
+        public string Material1 { get; set; } = string.Empty;
+        public string Material2 { get; set; } = string.Empty;
+        public string Material3 { get; set; } = string.Empty;
+        public string Legierung1 { get; set; } = string.Empty;
+        public string Legierung2 { get; set; } = string.Empty;
+        public string Legierung3 { get; set; } = string.Empty;
+        public string Kollektion { get; set; } = string.Empty;
+        public string Warengruppe { get; set; } = string.Empty;
+        public string Warenhauptgruppe { get; set; } = string.Empty;
+        public string Geschlecht { get; set; } = string.Empty;
         #endregion
 
-        // ! Constructors
-        #region contructors
-        public Article(string artikelnummer, string marke, string material1, string material2, string material3, string
-            legierung1, string legierung2, string legierung3, string kollektion, string warengruppe, string
-            warenhauptgruppe, string geschlecht)
+        #region Contructors
+        public Article(int artikelnummer) : this(artikelnummer, "", "", "", "", "", "", "", "", "", "", "")
         {
-            _artikelnummer = artikelnummer;
-            _marke = marke;
-            _material1 = material1;
-            _material2 = material2;
-            _material3 = material3;
-            _legierung1 = legierung1;
-            _legierung2 = legierung2;
-            _legierung3 = legierung3;
-            _kollektion = kollektion;
-            _warengruppe = warengruppe;
-            _warenhauptgruppe = warenhauptgruppe;
-            _geschlecht = geschlecht;
+
         }
         #endregion
 
-        // ! Methods
-        #region methods
+        #region Methods
         public override string ToString()
         {
             return $"Artikelnummer: {_artikelnummer}, Marke: {_marke}, Material1: {_material1}, Material2:" +
@@ -76,16 +61,18 @@
                 $"Legierung3: {_legierung3}, Kollektion: {_kollektion}, Warengruppe: {_warengruppe}," +
                 $"Warenhauptgruppe: {_warenhauptgruppe}, Geschlecht: {_geschlecht}";
         }
+
         public string ToCsv()
         {
             return $"{_artikelnummer};{_marke};{_material1};{_material2};{_material3};{_legierung1};{_legierung2};" +
                 $"{_legierung3};{_kollektion};{_warengruppe};{_warenhauptgruppe};{_geschlecht}";
         }
+
         public Dictionary<string, string> ToDictionary()
         {
             return new Dictionary<string, string>
             {
-                { "Artikelnummer", _artikelnummer },
+                { "Artikelnummer", _artikelnummer.ToString() },
                 { "Marke", _marke },
                 { "Material1", _material1 },
                 { "Material2", _material2 },
@@ -99,8 +86,8 @@
                 { "Geschlecht", _geschlecht }
             };
         }
-        // ! Getters
-        public string GetArtikelnummer()
+        #region Getters
+        public int GetArtikelnummer()
         {
             return _artikelnummer;
         }
@@ -148,8 +135,10 @@
         {
             return _geschlecht;
         }
-        // ! Setters
-        public void SetArtikelnummer(string artikelnummer)
+        #endregion
+
+        #region Setters
+        public void SetArtikelnummer(int artikelnummer)
         {
             _artikelnummer = artikelnummer;
         }
@@ -197,6 +186,8 @@
         {
             _geschlecht = geschlecht;
         }
+        #endregion
+
         #endregion
     }
 }

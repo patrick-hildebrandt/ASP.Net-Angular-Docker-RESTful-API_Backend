@@ -1,26 +1,81 @@
-﻿namespace ChristCodingChallengeBackend
+﻿using System.Text.Json;
+
+namespace ChristCodingChallengeBackend
 {
-    public class StorageService
+    public class StorageService(string filePath, string accessPath)
     {
-        // ! Fields
+        #region Fields
         // Hauptdateipfad
-        private readonly string _filePath;
+        private readonly string _filePath = filePath;
         // Zugriffsdateipfad
-        private readonly string _accessPath;
-
-        // ! Properties
-
-        // ! Constructors
-        public StorageService(string filePath, string accessPath)
+        private readonly string _accessPath = accessPath;
+        // JsonArticle => Article
+        private readonly Dictionary<string, Article> _articles = [];
+        // relevante Attribute
+        private readonly Dictionary<string, string> _relevantAttributes = new()
         {
-            _filePath = filePath;
-            _accessPath = accessPath;
+            { "MRK", "Marke" },
+            { "MAT", "Material1" },
+            { "MAT2", "Material2" },
+            { "MAT3", "Material3" },
+            { "LEG", "Legierung1" },
+            { "LEG2", "Legierung2" },
+            { "LEG3", "Legierung3" },
+            { "KOLL", "Kollektion" },
+            { "WRG_2", "Warengruppe" },
+            { "WHG_2", "Warenhauptgruppe" },
+            { "ZIEL", "Geschlecht" }
+        };
+        #endregion
+
+        #region Constructors
+
+        #endregion
+
+        #region Methods
+        public async Task StoreArticlesAsync(string result)
+        {
+            await ParseArticlesFromJson(result);
+
+            await StoreArticlesToCsv(_articles);
         }
 
-        // ! Methods
-        // todo Better Comments entfernen
-        // todo HIER WEITER
-        public async Task StoreArticlesAsync(IEnumerable<Article> articles)
+        private async Task ParseArticlesFromJson(string result)
+        {
+            // Deserialisierung
+            var articles = JsonSerializer.Deserialize<JsonArticle[]>(result);
+
+            // Verarbeitung von Artikeln
+            if (articles != null)
+            {
+                foreach (var article in articles)
+                {
+                    if (!_articles.ContainsKey(article.ArticleId.ToString()))
+                    {
+                        _articles.Add(article.ArticleId.ToString(), new Article(article.ArticleId));
+                    }
+                    foreach (var relevantAttribute in _relevantAttributes)
+                    {
+                        bool found = false;
+
+                        foreach (var attribute in article.Attributes)
+                        {
+                            if (attribute.Key == relevantAttribute.Key && attribute.Language == "de")
+                            {
+                                _articles[article.ArticleId.ToString()].GetType().GetProperty(relevantAttribute.Value)
+                                    ?.SetValue(_articles[article.ArticleId.ToString()], attribute.Value);
+
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) continue;
+                    }
+                }
+            }
+        }
+
+        private async Task StoreArticlesToCsv(Dictionary<string, Article> articles)
         {
             using (StreamWriter writer = new(_filePath))
             {
@@ -30,10 +85,20 @@
                 // Zeilen schreiben
                 foreach (var article in articles)
                 {
-                    await writer.WriteLineAsync($"{article.Artikelnummer};{article.Marke};{article.Material1};" +
-                        $"{article.Material2};{article.Material3};{article.Legierung1};{article.Legierung2};" +
-                        $"{article.Legierung3};{article.Kollektion};{article.Warengruppe};{article.Warenhauptgruppe}" +
-                        $";{article.Geschlecht}");
+                    await writer.WriteLineAsync(
+                        $"{article.Value.Artikelnummer};" +
+                        $"{article.Value.Marke};" +
+                        $"{article.Value.Material1};" +
+                        $"{article.Value.Material2};" +
+                        $"{article.Value.Material3};" +
+                        $"{article.Value.Legierung1};" +
+                        $"{article.Value.Legierung2};" +
+                        $"{article.Value.Legierung3};" +
+                        $"{article.Value.Kollektion};" +
+                        $"{article.Value.Warengruppe};" +
+                        $"{article.Value.Warenhauptgruppe};" +
+                        $"{article.Value.Geschlecht}"
+                        );
                 }
             }
             // Kopie der Hauptdatei für Zugriff
@@ -57,5 +122,6 @@
                 File.Copy(_filePath, _accessPath);
             }
         }
+        #endregion
     }
 }

@@ -2,15 +2,17 @@
 {
     public class ArticleApiService
     {
-        // ! Fields
+        #region Fields
         private readonly HttpClient _httpClient;
-        private readonly string _apiUrl;
         private readonly StorageService _storageService;
-        private readonly HashSet<Article> _articles = [];
+        private readonly string _apiUrl;
+        #endregion
 
-        // ! Properties
+        #region Properties
 
-        // ! Constructors
+        #endregion
+
+        #region Constructors
         public ArticleApiService(HttpClient httpClient, string apiUrl, StorageService storageService)
         {
             _httpClient = httpClient;
@@ -22,21 +24,22 @@
             _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(
                 "text/plain"));
             
-            // Ignorieren von Rückgabe-Task, Hauptprozess wird nicht blockiert
+            // Ignorieren von Rückgabe-Task => Hauptprozess wird nicht blockiert
             _ = PeriodicApiCallAsync();
         }
+        #endregion
 
-        // ! Methods
+        #region Methods
         private async Task PeriodicApiCallAsync()
         {
             try
             {
                 while (true)
                 {
-                    // API aufrufen
+                    // API-Call
                     string result = await GetArticlesAsync();
 
-                    // Artikel speichern
+                    // Datenverarbeitung in StorageService-Dienst
                     await _storageService.StoreArticlesAsync(result);
 
                     // 5 Minuten Verzögerung
@@ -56,7 +59,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                // response.IsSuccessStatusCode prüft nicht, ob Antwort vollständig verfügbar ist
+                // response.IsSuccessStatusCode prüft nicht, ob Antwort vollständig verfügbar
                 return await response.Content.ReadAsStringAsync();
             }
             else
@@ -64,5 +67,6 @@
                 throw new HttpRequestException($"API request failed with status code {response.StatusCode}");
             }
         }
+        #endregion
     }
 }

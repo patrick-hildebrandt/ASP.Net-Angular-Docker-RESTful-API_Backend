@@ -29,15 +29,16 @@ namespace ChristCodingChallengeBackend
             var app = builder.Build();
 
             // Wechseln für Produktiv / Entwicklung
-            if (app.Environment.IsDevelopment())
+            if (!app.Environment.IsDevelopment())
             {
-                // Fehlerbehandlungs-Middleware => leitet Fehler auf Error-Controller um
+                // Fehlerbehandlungs-Middleware => leitet Fehler auf Error-Controller (Error.cshtml) um
                 app.UseExceptionHandler("/Error");
 
                 // Middleware für HTTP-Strict-Transport-Security => leitet HTTP-Anfragen auf HTTPS um
                 app.UseHsts();
             }
 
+            // HIER WEITER ChatGPT
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
