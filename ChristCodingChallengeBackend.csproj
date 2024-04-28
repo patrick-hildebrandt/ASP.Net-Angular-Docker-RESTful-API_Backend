@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>b1230c5c-a681-4bb0-895d-d4f168987175</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <StartupObject>ChristCodingChallengeBackend.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

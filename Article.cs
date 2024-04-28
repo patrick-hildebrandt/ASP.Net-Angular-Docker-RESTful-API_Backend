@@ -1,53 +1,66 @@
-﻿namespace ChristCodingChallengeBackend
+﻿using System;
+
+namespace ChristCodingChallengeBackend
 {
-    public class Article(int artikelnummer, string marke, string material1, string material2, string material3,
+    public class Article(string artikelnummer, string marke, string material1, string material2, string material3,
         string legierung1, string legierung2, string legierung3, string kollektion, string warengruppe,
         string warenhauptgruppe, string geschlecht)
     {
         #region Fields
+        // tatsächliche Attribute:
         // articleId
-        private int _artikelnummer = artikelnummer;
-        // MRK
+        // Artikelnummer - MITMAS_ITNO
+        // Marke - MRK
+        // Material 1 - MAT
+        // Legierung 1 - LEG
+        // Kollektionsjahr - MITMAS_CFI4
+        // Warengruppe - WRG_2
+        // Warenhauptgruppe - WHG_2
+        // Zielgruppe - Ziel
+
+        // Artikelnummer - articleId
+        private string _artikelnummer = artikelnummer;
+        // Marke - MRK
         private string _marke = marke;
-        // MAT
+        // Material 1 - MAT
         private string _material1 = material1;
-        // MAT2
+        // Material 2 - MAT2
         private string _material2 = material2;
-        // MAT3
+        // Material 3 - MAT3
         private string _material3 = material3;
-        // LEG
+        // Legierung 1 - LEG
         private string _legierung1 = legierung1;
-        // LEG2
+        // Legierung 2 - LEG2
         private string _legierung2 = legierung2;
-        // LEG3
+        // Legierung 3 - LEG3
         private string _legierung3 = legierung3;
-        // KOLL
+        // Kollektion - KOLL
         private string _kollektion = kollektion;
-        // WRG_2
+        // Warengruppe - WRG_2
         private string _warengruppe = warengruppe;
-        // WHG_2
+        // Warenhauptgruppe - WHG_2
         private string _warenhauptgruppe = warenhauptgruppe;
-        // ZIEL
+        // Geschlecht - ZIEL
         private string _geschlecht = geschlecht;
         #endregion
 
         #region Propeties
-        public int Artikelnummer { get; set; }
-        public string Marke { get; set; } = string.Empty;
-        public string Material1 { get; set; } = string.Empty;
-        public string Material2 { get; set; } = string.Empty;
-        public string Material3 { get; set; } = string.Empty;
-        public string Legierung1 { get; set; } = string.Empty;
-        public string Legierung2 { get; set; } = string.Empty;
-        public string Legierung3 { get; set; } = string.Empty;
-        public string Kollektion { get; set; } = string.Empty;
-        public string Warengruppe { get; set; } = string.Empty;
-        public string Warenhauptgruppe { get; set; } = string.Empty;
-        public string Geschlecht { get; set; } = string.Empty;
+        public string Artikelnummer { get => _artikelnummer; set => _artikelnummer = value; }
+        public string Marke { get => _marke ; set => _marke = value; }
+        public string Material1 { get => _material1 ; set => _material1 = value; }
+        public string Material2 { get => _material2 ; set => _material2 = value; }
+        public string Material3 { get => _material3 ; set => _material3 = value; }
+        public string Legierung1 { get => _legierung1 ; set => _legierung1 = value; }
+        public string Legierung2 { get => _legierung2 ; set => _legierung2 = value; }
+        public string Legierung3 { get => _legierung3 ; set => _legierung3 = value; }
+        public string Kollektion { get => _kollektion ; set => _kollektion = value; }
+        public string Warengruppe { get => _warengruppe ; set => _warengruppe = value; }
+        public string Warenhauptgruppe { get => _warenhauptgruppe ; set => _warenhauptgruppe = value; }
+        public string Geschlecht { get => _geschlecht ; set => _geschlecht = value; }
         #endregion
 
         #region Contructors
-        public Article(int artikelnummer) : this(artikelnummer, "", "", "", "", "", "", "", "", "", "", "")
+        public Article(string artikelnummer) : this(artikelnummer, "", "", "", "", "", "", "", "", "", "", "")
         {
 
         }
@@ -87,7 +100,7 @@
             };
         }
         #region Getters
-        public int GetArtikelnummer()
+        public string GetArtikelnummer()
         {
             return _artikelnummer;
         }
@@ -138,7 +151,7 @@
         #endregion
 
         #region Setters
-        public void SetArtikelnummer(int artikelnummer)
+        public void SetArtikelnummer(string artikelnummer)
         {
             _artikelnummer = artikelnummer;
         }

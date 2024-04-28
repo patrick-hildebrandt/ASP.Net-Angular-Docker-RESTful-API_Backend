@@ -6,7 +6,7 @@ namespace ChristCodingChallengeBackend
     {
         // benutzerdefiniertes Attribut => zeigt z.B. De/Serialisierer an, wie Eigenschaft zu behandeln ist
         [JsonPropertyName("articleId")]
-        public int ArticleId { get; set; }
+        public string ArticleId { get; set; } = string.Empty;
 
         [JsonPropertyName("attributes")]
         public List<JsonAttribute> Attributes { get; set; } = [];

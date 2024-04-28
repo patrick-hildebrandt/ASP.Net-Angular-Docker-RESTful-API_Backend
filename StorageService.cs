@@ -2,9 +2,10 @@
 
 namespace ChristCodingChallengeBackend
 {
-    public class StorageService(string filePath, string accessPath)
+    public class StorageService(string filePath, string accessPath, ILogger<StorageService> logger)
     {
         #region Fields
+        private readonly ILogger<StorageService> _logger = logger;
         // Hauptdateipfad
         private readonly string _filePath = filePath;
         // Zugriffsdateipfad
@@ -14,6 +15,17 @@ namespace ChristCodingChallengeBackend
         // relevante Attribute
         private readonly Dictionary<string, string> _relevantAttributes = new()
         {
+            // tatsächliche Attribute:
+            // articleId
+            // Artikelnummer - MITMAS_ITNO
+            // Marke - MRK
+            // Material 1 - MAT
+            // Legierung 1 - LEG
+            // Kollektionsjahr - MITMAS_CFI4
+            // Warengruppe - WRG_2
+            // Warenhauptgruppe - WHG_2
+            // Zielgruppe - Ziel
+
             { "MRK", "Marke" },
             { "MAT", "Material1" },
             { "MAT2", "Material2" },
@@ -21,7 +33,8 @@ namespace ChristCodingChallengeBackend
             { "LEG", "Legierung1" },
             { "LEG2", "Legierung2" },
             { "LEG3", "Legierung3" },
-            { "KOLL", "Kollektion" },
+            //{ "KOLL", "Kollektion" },
+            { "MITMAS_CFI4", "Kollektion" },
             { "WRG_2", "Warengruppe" },
             { "WHG_2", "Warenhauptgruppe" },
             { "ZIEL", "Geschlecht" }
@@ -33,14 +46,15 @@ namespace ChristCodingChallengeBackend
         #endregion
 
         #region Methods
-        public async Task StoreArticlesAsync(string result)
+        //public async Task StoreArticlesAsync(string result)
+        public void StoreArticlesAsync(string result)
         {
-            await ParseArticlesFromJson(result);
+            ParseArticlesFromJson(result);
 
-            await StoreArticlesToCsv(_articles);
+            StoreArticlesToCsv(_articles);
         }
 
-        private async Task ParseArticlesFromJson(string result)
+        private void ParseArticlesFromJson(string result)
         {
             // Deserialisierung
             var articles = JsonSerializer.Deserialize<JsonArticle[]>(result);
@@ -50,20 +64,33 @@ namespace ChristCodingChallengeBackend
             {
                 foreach (var article in articles)
                 {
-                    if (!_articles.ContainsKey(article.ArticleId.ToString()))
+                    // Umsetzung der Update-Strategie
+                    if (!_articles.ContainsKey(article.ArticleId))
                     {
-                        _articles.Add(article.ArticleId.ToString(), new Article(article.ArticleId));
+                        _articles.Add(article.ArticleId, new Article(article.ArticleId));
                     }
+                    //if (!_articles.TryGetValue(article.ArticleId, out Article? value))
+                    //{
+                    //    value = new Article(article.ArticleId);
+                    //    _articles.Add(article.ArticleId, value);
+                    //}
                     foreach (var relevantAttribute in _relevantAttributes)
                     {
                         bool found = false;
 
                         foreach (var attribute in article.Attributes)
                         {
-                            if (attribute.Key == relevantAttribute.Key && attribute.Language == "de")
+                            if (attribute.Key == relevantAttribute.Key && attribute.Language == "de" ||
+                                attribute.Key == relevantAttribute.Key && attribute.Language == null)
                             {
-                                _articles[article.ArticleId.ToString()].GetType().GetProperty(relevantAttribute.Value)
-                                    ?.SetValue(_articles[article.ArticleId.ToString()], attribute.Value);
+                                // Umsetzung der Update-Strategie
+                                if (_articles[article.ArticleId].GetType().GetProperty(relevantAttribute.Value)?
+                                    .ToString() != attribute.Value)
+                                {
+                                    _articles[article.ArticleId].GetType().GetProperty(relevantAttribute.Value)?
+                                        .SetValue(_articles[article.ArticleId], attribute.Value);
+                                }
+                                //value.GetType().GetProperty(relevantAttribute.Value)?.SetValue(value, attribute.Value);
 
                                 found = true;
                                 break;
@@ -72,10 +99,19 @@ namespace ChristCodingChallengeBackend
                         if (found) continue;
                     }
                 }
+                foreach (var article in _articles)
+                {
+                    _logger.LogInformation("ArticleId: {ArticleId}", article.Key);
+                    //foreach (var property in article.Value.GetType().GetProperties())
+                    //{
+                    //    _logger.LogInformation("{Property}: {Value}", property.Name, property.GetValue(article.Value));
+                    //}
+                }
             }
         }
 
-        private async Task StoreArticlesToCsv(Dictionary<string, Article> articles)
+        //private async Task StoreArticlesToCsv(Dictionary<string, Article> articles)
+        private void StoreArticlesToCsv(Dictionary<string, Article> articles)
         {
             using (StreamWriter writer = new(_filePath))
             {
@@ -85,7 +121,8 @@ namespace ChristCodingChallengeBackend
                 // Zeilen schreiben
                 foreach (var article in articles)
                 {
-                    await writer.WriteLineAsync(
+                    //await writer.WriteLineAsync(
+                    writer.WriteLineAsync(
                         $"{article.Value.Artikelnummer};" +
                         $"{article.Value.Marke};" +
                         $"{article.Value.Material1};" +
@@ -100,6 +137,7 @@ namespace ChristCodingChallengeBackend
                         $"{article.Value.Geschlecht}"
                         );
                 }
+                Console.WriteLine("File written");
             }
             // Kopie der Hauptdatei für Zugriff
             CreateAccessFile();
