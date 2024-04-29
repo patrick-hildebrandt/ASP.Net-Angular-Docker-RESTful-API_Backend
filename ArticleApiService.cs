@@ -54,9 +54,7 @@
                     //throw new Exception($"Periodic API-Call failed: {ex.Message}");
                 }
                 // 5 Minuten Verzögerung
-                //await Task.Delay(300 * 1000);
-                // todo Test stream in use
-                await Task.Delay(60 * 1000);
+                await Task.Delay(300 * 1000);
             }
         }
 
