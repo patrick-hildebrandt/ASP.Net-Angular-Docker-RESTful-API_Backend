@@ -1,4 +1,6 @@
 ﻿using System.Text.Json;
+using CsvHelper;
+using System.Globalization;
 
 namespace ChristCodingChallengeBackend
 {
@@ -46,12 +48,49 @@ namespace ChristCodingChallengeBackend
         #endregion
 
         #region Methods
-        //public async Task StoreArticlesAsync(string result)
-        public void StoreArticlesAsync(string result)
+        public List<JsonArticle> GetArticlesJson()
+        {
+            using var reader = new StreamReader(_accessPath);
+            using var csv = new CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";"
+            });
+
+            csv.Read();
+            csv.ReadHeader();
+
+            var articles = new List<JsonArticle>();
+
+            while (csv.Read())
+            {
+                var article = new JsonArticle
+                {
+                    Artikelnummer = csv.GetField("Artikelnummer"),
+                    Marke = csv.GetField("Marke"),
+                    Material1 = csv.GetField("Material1"),
+                    Legierung1 = csv.GetField("Legierung1"),
+                    Kollektion = csv.GetField("Kollektion"),
+                    Warengruppe = csv.GetField("Warengruppe"),
+                    Warenhauptgruppe = csv.GetField("Warenhauptgruppe"),
+                    Geschlecht = csv.GetField("Geschlecht")
+                };
+
+                articles.Add(article);
+            }
+            return articles;
+        }
+
+        public void StoreArticles(string result)
         {
             ParseArticlesFromJson(result);
 
             StoreArticlesToCsv(_articles);
+
+            //var test = GetArticlesJson();
+            //foreach (var article in test)
+            //{
+            //    _logger.LogInformation("ArticleId: {ArticleId}", article.ArticleId);
+            //}
         }
 
         private void ParseArticlesFromJson(string result)
@@ -89,9 +128,11 @@ namespace ChristCodingChallengeBackend
                                 if (_articles[article.ArticleId].GetType().GetProperty(relevantAttribute.Value)?
                                     .ToString() != attribute.Value)
                                 {
+                                    // lol
                                     _articles[article.ArticleId].GetType().GetProperty(relevantAttribute.Value)?
                                         .SetValue(_articles[article.ArticleId], attribute.Value);
                                 }
+                                // todo ggf. doch out-Parameter verwenden für Performance ? Semantik korrekt ?
                                 //value.GetType().GetProperty(relevantAttribute.Value)?.SetValue(value, attribute.Value);
 
                                 found = true;
@@ -112,7 +153,6 @@ namespace ChristCodingChallengeBackend
             }
         }
 
-        //private async Task StoreArticlesToCsv(Dictionary<string, Article> articles)
         private void StoreArticlesToCsv(Dictionary<string, Article> articles)
         {
             using (StreamWriter writer = new(_filePath))
@@ -123,21 +163,6 @@ namespace ChristCodingChallengeBackend
                 // Zeilen schreiben
                 foreach (var article in articles)
                 {
-                    //await writer.WriteLineAsync(
-                    //writer.WriteLine(
-                    //    $"{article.Value.Artikelnummer};" +
-                    //    $"{article.Value.Marke};" +
-                    //    $"{article.Value.Material1};" +
-                    //    $"{article.Value.Material2};" +
-                    //    $"{article.Value.Material3};" +
-                    //    $"{article.Value.Legierung1};" +
-                    //    $"{article.Value.Legierung2};" +
-                    //    $"{article.Value.Legierung3};" +
-                    //    $"{article.Value.Kollektion};" +
-                    //    $"{article.Value.Warengruppe};" +
-                    //    $"{article.Value.Warenhauptgruppe};" +
-                    //    $"{article.Value.Geschlecht}"
-                    //    );
                     writer.WriteLine(article.Value.ToCsv());
                 }
                 Console.WriteLine("Articles-File wurde geschrieben");

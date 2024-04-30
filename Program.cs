@@ -36,6 +36,9 @@ namespace ChristCodingChallengeBackend
             builder.Services.AddSingleton<ArticleApiService>(new ArticleApiService(httpClient, apiUrl,
                 storageService, articleApiLogger));
 
+            // wichtig um Controller-Endpunkte zu aktivieren
+            builder.Services.AddControllers();
+
             // Builder Pattern => Aufbau der WebApplication
             var app = builder.Build();
 

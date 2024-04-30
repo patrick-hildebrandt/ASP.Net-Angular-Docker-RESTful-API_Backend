@@ -45,13 +45,11 @@
                     _logger.LogInformation("ResultLength: {ResultLength}", result.Length);
 
                     // Datenverarbeitung in StorageService-Dienst
-                    //await _storageService.StoreArticlesAsync(result);
-                    if (!string.IsNullOrEmpty(result)) _storageService.StoreArticlesAsync(result);
+                    if (!string.IsNullOrEmpty(result)) _storageService.StoreArticles(result);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogInformation("Periodic API-Call failed: {Exception}", ex.Message);
-                    //throw new Exception($"Periodic API-Call failed: {ex.Message}");
                 }
                 // 5 Minuten Verzögerung
                 await Task.Delay(300 * 1000);
@@ -73,7 +71,6 @@
             else
             {
                 _logger.LogInformation("API request failed with status code {Status}", response.StatusCode);
-                //throw new HttpRequestException($"API request failed with status code {response.StatusCode}");
                 return string.Empty;
             }
         }

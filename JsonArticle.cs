@@ -8,6 +8,23 @@ namespace ChristCodingChallengeBackend
         [JsonPropertyName("articleId")]
         public string ArticleId { get; set; } = string.Empty;
 
+        [JsonPropertyName("artikelnummer")]
+        public string Artikelnummer { get; set; } = string.Empty;
+        [JsonPropertyName("marke")]
+        public string Marke { get; set; } = string.Empty;
+        [JsonPropertyName("material1")]
+        public string Material1 { get; set; } = string.Empty;
+        [JsonPropertyName("legierung1")]
+        public string Legierung1 { get; set; } = string.Empty;
+        [JsonPropertyName("kollektion")]
+        public string Kollektion { get; set; } = string.Empty;
+        [JsonPropertyName("warengruppe")]
+        public string Warengruppe { get; set; } = string.Empty;
+        [JsonPropertyName("warenhauptgruppe")]
+        public string Warenhauptgruppe { get; set; } = string.Empty;
+        [JsonPropertyName("geschlecht")]
+        public string Geschlecht { get; set; } = string.Empty;
+
         [JsonPropertyName("attributes")]
         public List<JsonAttribute> Attributes { get; set; } = [];
     }
