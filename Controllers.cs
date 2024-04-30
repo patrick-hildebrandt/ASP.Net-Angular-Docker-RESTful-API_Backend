@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ChristCodingChallengeBackend.Controllers
+namespace ChristCodingChallengeBackend
 {
     [ApiController]
     [Route("api/articles")]
@@ -8,7 +8,6 @@ namespace ChristCodingChallengeBackend.Controllers
     public class ArticleController(StorageService storageService) : ControllerBase
     {
         private readonly StorageService _storageService = storageService;
-
         [HttpGet]
         public ActionResult<IEnumerable<JsonArticle>> GetArticles()
         {

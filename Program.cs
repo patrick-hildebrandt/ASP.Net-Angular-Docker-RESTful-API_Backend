@@ -1,4 +1,5 @@
 // ASP.NET Core Web Application
+
 namespace ChristCodingChallengeBackend
 {
     public class Program
@@ -49,11 +50,11 @@ namespace ChristCodingChallengeBackend
                 //app.UseExceptionHandler("/Error");
 
                 // Middleware für HTTP-Strict-Transport-Security => leitet HTTP-Anfragen auf HTTPS um
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             // leitet HTTP-Anfragen auf HTTPS um
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             // Middleware für statische Dateien => ermöglicht Bereitstellung von Dateien
             app.UseStaticFiles();
             // Middleware für Endpunkt-Routing => leitet Anfragen an Endpunkte weiter
