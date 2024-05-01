@@ -14,6 +14,21 @@ namespace ChristCodingChallengeBackend
             string filePath = "articles.csv";
             string accessPath = "access.csv";
 
+            // Builder Pattern => Konfiguration der WebApplication vor Initialisierung
+            var builder = WebApplication.CreateBuilder(args);
+
+            // CORS(Cross Origin Resource Sharing)
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalhost4200",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
+
             // einheitliche Konfiguration der Protokollierung
             var loggerFactory = LoggerFactory.Create(builder =>
             {
@@ -23,9 +38,6 @@ namespace ChristCodingChallengeBackend
             // gewährleistet Trennung der Log-Meldungen
             ILogger<ArticleApiService> articleApiLogger = new Logger<ArticleApiService>(loggerFactory);
             ILogger<StorageService> storageLogger = new Logger<StorageService>(loggerFactory);
-
-            // Builder Pattern => Konfiguration der WebApplication vor Initialisierung
-            var builder = WebApplication.CreateBuilder(args);
 
             // Singleton Pattern => Solo-Instanz, globaler Zugriffspunkt
             var storageService = new StorageService(filePath, accessPath, storageLogger);
@@ -59,6 +71,14 @@ namespace ChristCodingChallengeBackend
             app.UseStaticFiles();
             // Middleware für Endpunkt-Routing => leitet Anfragen an Endpunkte weiter
             app.UseRouting();
+            // CORS: allow localhost:4200
+            app.UseCors("AllowLocalhost4200");
+            // Controller-Endpunkte aktivieren
+            app.UseEndpoints(endpoints =>
+            {
+                // Hier registrierst du deine Controller-Endpunkte
+                endpoints.MapControllers();
+            });
             // Middleware für Authentifizierung => leitet Anfragen an Authentifizierungsdienst weiter
             //app.UseAuthorization();
             // Middleware für Endpunkte => Fallback-Handler für nicht abgefangene Anfragen

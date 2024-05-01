@@ -51,7 +51,8 @@ namespace ChristCodingChallengeBackend
         public List<JsonArticle> GetArticlesJson()
         {
             using var reader = new StreamReader(_accessPath);
-            using var csv = new CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
+            using var csv = new CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(CultureInfo
+                .InvariantCulture)
             {
                 Delimiter = ";"
             });
@@ -89,7 +90,7 @@ namespace ChristCodingChallengeBackend
             //var test = GetArticlesJson();
             //foreach (var article in test)
             //{
-            //    _logger.LogInformation("ArticleId: {ArticleId}", article.ArticleId);
+            //    _logger.LogInformation("Artikelnummer: {Artikelnummer}", article.Artikelnummer);
             //}
         }
 
@@ -103,18 +104,12 @@ namespace ChristCodingChallengeBackend
             {
                 foreach (var article in articles)
                 {
-                    // todo ggf. Update-Strategie überarbeiten mit DB oder Docker-Lösung ?
+                    // todo ggf. Update-Strategie überarbeiten mit DB oder Docker-Volume ?
                     // Umsetzung der Update-Strategie
                     if (!_articles.ContainsKey(article.ArticleId))
                     {
                         _articles.Add(article.ArticleId, new Article(article.ArticleId));
                     }
-                    // todo ggf. doch out-Parameter verwenden für Performance ? Semantik korrekt ?
-                    //if (!_articles.TryGetValue(article.ArticleId, out Article? value))
-                    //{
-                    //    value = new Article(article.ArticleId);
-                    //    _articles.Add(article.ArticleId, value);
-                    //}
                     foreach (var relevantAttribute in _relevantAttributes)
                     {
                         bool found = false;
@@ -128,12 +123,9 @@ namespace ChristCodingChallengeBackend
                                 if (_articles[article.ArticleId].GetType().GetProperty(relevantAttribute.Value)?
                                     .ToString() != attribute.Value)
                                 {
-                                    // lol
                                     _articles[article.ArticleId].GetType().GetProperty(relevantAttribute.Value)?
                                         .SetValue(_articles[article.ArticleId], attribute.Value);
                                 }
-                                // todo ggf. doch out-Parameter verwenden für Performance ? Semantik korrekt ?
-                                //value.GetType().GetProperty(relevantAttribute.Value)?.SetValue(value, attribute.Value);
 
                                 found = true;
                                 break;
