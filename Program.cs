@@ -56,31 +56,37 @@ namespace ChristCodingChallengeBackend
             var app = builder.Build();
 
             // Wechseln für Produktiv / Entwicklung
-            if (app.Environment.IsDevelopment())
+            if (!app.Environment.IsDevelopment())
             {
+                Console.WriteLine("app.Environment.IsProduction");
                 // Fehlerbehandlungs-Middleware => leitet Fehler auf Error-Controller um
-                //app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Error");
 
                 // Middleware für HTTP-Strict-Transport-Security => leitet HTTP-Anfragen auf HTTPS um
-                //app.UseHsts();
+                app.UseHsts();
+
+                // leitet HTTP-Anfragen auf HTTPS um
+                app.UseHttpsRedirection();
             }
 
-            // leitet HTTP-Anfragen auf HTTPS um
-            //app.UseHttpsRedirection();
             // Middleware für statische Dateien => ermöglicht Bereitstellung von Dateien
             app.UseStaticFiles();
+
+            // CORS: erlaube localhost:4200
+            app.UseCors("AllowLocalhost4200");
+
             // Middleware für Endpunkt-Routing => leitet Anfragen an Endpunkte weiter
             app.UseRouting();
-            // CORS: allow localhost:4200
-            app.UseCors("AllowLocalhost4200");
-            // Controller-Endpunkte aktivieren
+
+            // Middleware für Authentifizierung => leitet Anfragen an Authentifizierungsdienst weiter
+            app.UseAuthorization();
+
+            // wichtig um Controller-Endpunkte aktivieren
             app.UseEndpoints(endpoints =>
             {
-                // Hier registrierst du deine Controller-Endpunkte
+                ControllerActionEndpointConventionBuilder controllerActionEndpointConventionBuilder =
                 endpoints.MapControllers();
             });
-            // Middleware für Authentifizierung => leitet Anfragen an Authentifizierungsdienst weiter
-            //app.UseAuthorization();
             // Middleware für Endpunkte => Fallback-Handler für nicht abgefangene Anfragen
             app.Run();
         }

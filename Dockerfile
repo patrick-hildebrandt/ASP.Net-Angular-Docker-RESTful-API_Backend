@@ -26,4 +26,5 @@ RUN dotnet publish "ChristCodingChallengeBackend.csproj" -c Release -o /app/publ
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "ChristCodingChallengeBackend.dll"]
