@@ -4,6 +4,7 @@ using System.Globalization;
 
 namespace ChristCodingChallengeBackend
 {
+    // primärer Konstruktor
     public class StorageService(string filePath, string accessPath, ILogger<StorageService> logger)
     {
         #region Fields

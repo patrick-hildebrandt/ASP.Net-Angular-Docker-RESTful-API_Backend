@@ -2,6 +2,7 @@
 
 namespace ChristCodingChallengeBackend
 {
+    // primärer Konstruktor
     public class Article(string artikelnummer, string marke, string material1, string material2, string material3,
         string legierung1, string legierung2, string legierung3, string kollektion, string warengruppe,
         string warenhauptgruppe, string geschlecht)
@@ -85,7 +86,7 @@ namespace ChristCodingChallengeBackend
         {
             return new Dictionary<string, string>
             {
-                { "Artikelnummer", _artikelnummer.ToString() },
+                { "Artikelnummer", _artikelnummer },
                 { "Marke", _marke },
                 { "Material1", _material1 },
                 { "Material2", _material2 },
